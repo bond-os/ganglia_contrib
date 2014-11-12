@@ -30,9 +30,11 @@ class PostfixLogtailer(object):
         # Sep 12 13:39:11 host postfix/local[11393]: E412470C2B8: to=<foo@host>, orig_to=<foo@bar.com>, relay=local, delay=5, delays=1.9/0/0/3.2, dsn=2.0.0, status=sent (delivered to command: /usr/local/bin/procmail)
         # bounces:
         # Sep 12 11:58:52 host postfix/local[18444]: 8D3C671C324: to=<invalid@host>, orig_to=<invalid@bar.com>, relay=local, delay=0.43, delays=0.41/0/0/0.02, dsn=5.1.1, status=bounced (unknown user: "invalid")
-        self.reg_connections = re.compile('^.*postfix/smtpd.*connect from unknown.*$')
-        self.reg_deliveries = re.compile('^.*postfix/local.* status=sent .*$')
-        self.reg_bounces = re.compile('^.*postfix/local.* status=bounced .*$')
+        self.reg_connections = re.compile('^.*postfix/(smtp|local).*connect from unknown.*$')
+        # changed from postfix/local to postfix/smtp as in
+        # Nov  7 08:33:11 gd-vm59 postfix/smtp[21489]: 12D22BD60: to=<_removed_>, relay=mx13.o2.pl[193.17.41.15]:25, delay=6.7, delays=0.01/0/0.58/6.1, dsn=2.0.0, status=sent (250 OK queued as AxCWfI)
+        self.reg_deliveries = re.compile('^.*postfix/(smtp|local).* status=sent .*$')
+        self.reg_bounces = re.compile('^.*postfix/(smtp|local).* status=bounced .*$')
 
         # assume we're in daemon mode unless set_check_duration gets called
         self.dur_override = False
